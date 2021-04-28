@@ -1,13 +1,13 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'US Districts GeoJSON Update'
+description: 'Compiles and updates all Congressional districts into GeoJSON'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  path:
+    description: 'Path to a GeoJSON file to save'
     required: true
-    default: '1000'
-outputs:
-  time: # output will be available to future steps
-    description: 'The message to output'
+  zip-link:
+    description: 'Link to zip archive of unitedstates/districts'
+    required: true
+    default: 'https://github.com/unitedstates/districts/archive/gh-pages.zip'
 runs:
   using: 'node12'
   main: 'dist/index.js'

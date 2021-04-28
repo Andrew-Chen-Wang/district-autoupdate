@@ -1,23 +1,28 @@
-const wait = require('./wait');
-const process = require('process');
-const cp = require('child_process');
-const path = require('path');
+const mock = require('mock-fs');
+const download = require('./download');
 
-test('throws invalid number', async () => {
-  await expect(wait('foo')).rejects.toThrow('milliseconds not a number');
+// test("generate random path intersects", async () => {
+//     const first = 1, second = 2, third = 3;
+//     jest.spyOn(global.Math, "floor")
+//         .mockReturnValueOnce(1)
+//         .mockReturnValueOnce(2)
+//         .mockReturnValueOnce(3);
+//     mock({
+//         '_districts-1': {/* Empty dir */},
+//         '_districts-2.zip': 'blank'
+//     })
+//     await download.generateRandomPath();
+// })
+//
+// test("successfully generates path", async () => {
+//     await download.generateRandomPath();
+// });
+
+test('fetch error', async () => {
+    const url = 'https://blahmcblahface-123lsafd.io/123dk-129843aksl/45983dsl';
+    await expect(download.getDistrictsRepo(url)).rejects.toThrow();
 });
 
-test('wait 500 ms', async () => {
-  const start = new Date();
-  await wait(500);
-  const end = new Date();
-  var delta = Math.abs(end - start);
-  expect(delta).toBeGreaterThanOrEqual(500);
-});
-
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = 500;
-  const ip = path.join(__dirname, 'index.js');
-  console.log(cp.execSync(`node ${ip}`, {env: process.env}).toString());
+afterEach(() => {
+    mock.restore();
 })

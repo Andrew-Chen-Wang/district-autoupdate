@@ -1,7 +1,7 @@
 {
-  "name": "javascript-action",
+  "name": "us-districts-geojson",
   "version": "1.0.0",
-  "description": "JavaScript Action Template",
+  "description": "Compiles and updates all Congressional districts into GeoJSON",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
@@ -11,25 +11,31 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/javascript-action.git"
+    "url": "git+https://github.com/Andrew-Chen-Wang/district-autoupdate.git"
   },
   "keywords": [
     "GitHub",
     "Actions",
-    "JavaScript"
+    "United States",
+    "Districts",
+    "GeoJSON"
   ],
-  "author": "",
-  "license": "MIT",
+  "author": "Andrew Chen Wang",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/actions/javascript-action/issues"
+    "url": "https://github.com/Andrew-Chen-Wang/district-autoupdate/issues"
   },
-  "homepage": "https://github.com/actions/javascript-action#readme",
+  "homepage": "https://github.com/Andrew-Chen-Wang/district-autoupdate#readme",
   "dependencies": {
-    "@actions/core": "^1.2.5"
+    "@actions/core": "^1.2.5",
+    "globby": "^11.0.3",
+    "node-fetch": "^2.6.1",
+    "yauzl": "^2.10.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.27.0",
     "eslint": "^7.4.0",
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "mock-fs": "^4.14.0"
   }
 }
