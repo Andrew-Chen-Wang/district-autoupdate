@@ -4,7 +4,7 @@ inputs:
   path:
     description: 'Path to a GeoJSON file to save'
     required: true
-  zip-link:
+  link:
     description: 'Link to zip archive of unitedstates/districts'
     required: false
     default: 'https://github.com/unitedstates/districts/archive/gh-pages.zip'
