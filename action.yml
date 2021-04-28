@@ -6,7 +6,7 @@ inputs:
     required: true
   zip-link:
     description: 'Link to zip archive of unitedstates/districts'
-    required: true
+    required: false
     default: 'https://github.com/unitedstates/districts/archive/gh-pages.zip'
 runs:
   using: 'node12'
