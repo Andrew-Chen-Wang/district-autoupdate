@@ -5,5 +5,4 @@ afterEach(() => {
 })
 
 test("random test", async () => {
-    await expect(true).rejects.toThrow();
 });
