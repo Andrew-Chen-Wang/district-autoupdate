@@ -15214,7 +15214,7 @@ const path = __nccwpck_require__(5622);
 async function run() {
   const clonedDir = path.join(__dirname, `.district-${Math.random().toString(16)}`);
   const git = simpleGit();
-  let repo = `https://Andrew-Chen-Wang:${core.getInput("token")}@github.com:${core.getInput("districts-repo")}.git`;
+  let repo = `https://Andrew-Chen-Wang:${core.getInput("token")}@github.com/${core.getInput("districts-repo")}.git`;
   console.log("Cloning...");
   await git.clone(repo, clonedDir);
   await fs.readdir(clonedDir, (err, files) => {
