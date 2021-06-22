@@ -1,10 +1,10 @@
 const core = require('@actions/core');
 const fs = require('fs');
 const globby = require('globby');
-const download = require('./download');
 
 async function getPath() {
-  const filePath = core.getInput('path');
+  // const filePath = core.getInput('path');
+  const filePath = "./districts.geojson"
   try {
     await fs.promises.access(filePath);
     return filePath;
@@ -14,6 +14,7 @@ async function getPath() {
 }
 
 async function compile(dir) {
+  // core.info("Compiling GeoJSON Objects into FeatureCollection");
   let featureCollection = {
     "type": "FeatureCollection",
     "features": [],
@@ -41,25 +42,48 @@ async function compile(dir) {
     })
   });
   statesSeen.forEach(x => {featureCollection.features.concat(x.data);});
-  fs.writeFile(await getPath(), JSON.stringify(featureCollection), (err) => {
+  const compiledPath = await getPath()
+  fs.writeFile(compiledPath, JSON.stringify(featureCollection), (err) => {
     throw new Error(`Couldn't write into the file. Error:\n${err}`);
-  })
+  });
+  // core.info(`Dumped file at ${compiledPath}`);
+  // core.setOutput("filePath", compiledPath);
 }
 
-async function run() {
+async function run1() {
   try {
-    core.info("Downloading the repository: unitedstates/districts");
-    const url = core.getInput("link");
+    // core.info("Downloading the repository: unitedstates/districts");
+    // const url = core.getInput("link");
+    const url = 'https://github.com/unitedstates/districts/archive/gh-pages.zip'
     if (!url.endsWith(".zip")) {
       core.setFailed("Link must be a zip file");
       return;
     }
-    const dir = await download.getDistrictsRepo(url);
-    await compile(dir);
-    fs.unlink(dir, () => {});
+    // const dir = await download.getDistrictsRepo(url);
+    // await compile(dir);
+    // fs.unlink(dir, () => {});
   } catch (error) {
-    core.setFailed(error.message);
+    // core.setFailed(error.message);
   }
+}
+
+const simpleGit = require('simple-git');
+
+async function run() {
+  const clonedDir = `.district-${Math.random().toString(16)}`;
+  await fs.mkdir(clonedDir, () => {});
+  const git = simpleGit(clonedDir);
+  let repo = "git@github.com:unitedstates/district";
+  try {
+    await git.init()
+    await git.clone(repo);
+  } catch (e) {
+  }
+  await fs.readdir(clonedDir, (err, files) => {
+    files.forEach(file => {
+      console.log(file);
+    });
+  });
 }
 
 run();
