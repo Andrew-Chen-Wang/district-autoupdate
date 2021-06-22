@@ -15160,23 +15160,20 @@ async function compile(dir) {
         "features": [],
     }
     let paths = await globby(`${dir}/cds/**/shape.geojson`);
-    // The format is typically in cds/year/STATE-DISTRICT-#/shape.geojson
-    // which means the year is ordered first after sort
-    paths.sort();
     // format: state: {year: last year seen, data: []}
-    let statesSeen = {};
-    let fileLength = null;
-    let i = 1;  // completion counter... never programming in JS with files again
+    const statesSeen = {}, pathsLength = paths.length;
+    let i = 0;  // completion counter... never programming in JS with files again
+    console.log(`Computing ${pathsLength} files districts...`);
     for (let el of paths) {
-        await fs.readFile(el, "utf-8", (err, data) => {
+        fs.readFile(el, "utf-8", (err, data) => {
             if (err) {
                 i++;
                 throw err;
             }
             el = el.split("/");
-            if (fileLength === null) fileLength = el.length;
-            const year = el[fileLength - 3];
-            const state = el[fileLength - 2].split("-")[0];
+            const fileLength = el.length,
+                year = el[fileLength - 3],
+                state = el[fileLength - 2].split("-")[0];
             let val = statesSeen[state];
             if (val === undefined || val.year !== year) {
                 statesSeen[state] = {year: year, data: [JSON.parse(data)]};
@@ -15184,21 +15181,26 @@ async function compile(dir) {
                 statesSeen[state].data.push(JSON.parse(data));
             }
             i++;
-            core.info(`Processed: ${state} at ${year} (counter: ${i} / ${paths.length})`)
+            core.info(`Processed: ${state} at ${year} (counter: ${i} / ${pathsLength})`);
         });
     }
+    let waitMax = 3600, waitCounter = 0;
     while (i !== paths.length) {
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => {
+            waitCounter++;
+            if (++waitCounter > waitMax) throw new Error("Exceeded an hour of trying");
+            return setTimeout(r, 1000);
+        });
     }
     for (const x of Object.values(statesSeen)) {
-        featureCollection.features.concat(x.data);
+        featureCollection.features.push(...x.data);
     }
     const compiledPath = await getPath();
     await fs.writeFile(compiledPath, JSON.stringify(featureCollection), (err) => {
-        throw new Error(`Couldn't write into the file. Error:\n${err}`);
+        if (err) throw new Error(`Couldn't write into the file. Error:\n${err}`);
+        core.info(`Dumped file at ${compiledPath}`);
+        core.setOutput("filePath", compiledPath);
     });
-    core.info(`Dumped file at ${compiledPath}`);
-    core.setOutput("filePath", compiledPath);
 }
 
 async function run() {
