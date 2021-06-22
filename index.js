@@ -68,22 +68,19 @@ async function run1() {
 }
 
 const simpleGit = require('simple-git');
-
+const path = require('path');
 async function run() {
-  const clonedDir = `.district-${Math.random().toString(16)}`;
-  await fs.mkdir(clonedDir, () => {});
-  const git = simpleGit(clonedDir);
-  let repo = "git@github.com:unitedstates/district";
-  try {
-    await git.init()
-    await git.clone(repo);
-  } catch (e) {
-  }
+  const clonedDir = path.join(__dirname, `.district-${Math.random().toString(16)}`);
+  const git = simpleGit();
+  let repo = "git@github.com:unitedstates/districts.git";
+  console.log("Cloning")
+  await git.clone(repo, clonedDir);
   await fs.readdir(clonedDir, (err, files) => {
     files.forEach(file => {
       console.log(file);
     });
   });
+  await git.cwd(clonedDir);
 }
 
 run();
