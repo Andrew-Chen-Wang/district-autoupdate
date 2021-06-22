@@ -4,6 +4,7 @@ inputs:
   path:
     description: 'Path to a GeoJSON file to save'
     required: true
+    default: "districts.geojson"
   districts-repo:
     description: 'Repository that holds the districts'
     required: false
@@ -13,7 +14,7 @@ inputs:
     required: false
     default: 'gh-pages'
   token:
-    description: 'Optional: GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'
+    description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'
     required: false
     default: ${{ github.token }}
 runs:
