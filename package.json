@@ -4,6 +4,7 @@
   "description": "Compiles and updates all Congressional districts into GeoJSON",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "lint": "eslint .",
     "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
     "test": "jest",
@@ -27,14 +28,14 @@
   },
   "homepage": "https://github.com/Andrew-Chen-Wang/district-autoupdate#readme",
   "dependencies": {
-    "@actions/core": "^1.2.5",
+    "@actions/core": "^1.2.7",
+    "@actions/exec": "^1.0.4",
     "globby": "^11.0.3",
-    "node-fetch": "^2.6.1",
-    "yauzl": "^2.10.0"
+    "simple-git": "^2.40.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.27.0",
-    "eslint": "^7.4.0",
+    "@vercel/ncc": "^0.28.3",
+    "eslint": "^7.25.0",
     "jest": "^26.6.3",
     "mock-fs": "^4.14.0"
   }

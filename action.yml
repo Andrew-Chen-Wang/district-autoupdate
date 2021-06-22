@@ -4,10 +4,19 @@ inputs:
   path:
     description: 'Path to a GeoJSON file to save'
     required: true
-  link:
-    description: 'Link to zip archive of unitedstates/districts'
+    default: "districts.geojson"
+  districts-repo:
+    description: 'Repository that holds the districts'
     required: false
-    default: 'https://github.com/unitedstates/districts/archive/gh-pages.zip'
+    default: 'unitedstates/districts'
+  sha-branch:
+    description: 'Branch or SHA value to view full git tree'
+    required: false
+    default: 'gh-pages'
+  token:
+    description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'
+    required: false
+    default: ${{ github.token }}
 runs:
   using: 'node12'
   main: 'dist/index.js'
