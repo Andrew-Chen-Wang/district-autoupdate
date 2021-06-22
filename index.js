@@ -72,8 +72,8 @@ const path = require('path');
 async function run() {
   const clonedDir = path.join(__dirname, `.district-${Math.random().toString(16)}`);
   const git = simpleGit();
-  let repo = `git@github.com:${core.getInput("districts-repo")}.git`;
-  console.log("Cloning");
+  let repo = `https://Andrew-Chen-Wang:${core.getInput("token")}@github.com:${core.getInput("districts-repo")}.git`;
+  console.log("Cloning...");
   await git.clone(repo, clonedDir);
   await fs.readdir(clonedDir, (err, files) => {
     files.forEach(file => {
