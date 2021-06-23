@@ -7,6 +7,11 @@ const utils = require('./utils');
 
 async function getPath() {
     let givenPath = core.getInput("path");
+    console.log(__dirname)
+    console.log(path.join(__dirname, "..", "..", core.getInput("path")))
+    console.log(path.join(__dirname, "..", core.getInput("path")))
+    console.log(path.join(path.resolve(__dirname, ".."), givenPath))
+    console.log(path.join(path.resolve(__dirname, "..", ".."), givenPath))
     givenPath = path.isAbsolute(givenPath) ? givenPath :
         // need parent directory using ".." since we're in dist folder
         path.join(__dirname, "..", "..", core.getInput("path"));
@@ -62,6 +67,8 @@ async function compile(dir) {
         core.info(`Dumped file at ${compiledPath}`);
         core.setOutput("filePath", compiledPath);
     });
+    const git = simpleGit();
+    git.add(compiledPath);
 }
 
 async function run() {
