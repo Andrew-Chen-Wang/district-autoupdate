@@ -6,10 +6,13 @@ const path = require('path');
 const utils = require('./utils');
 
 async function getPath() {
-    const filePath = path.join(__dirname, core.getInput("path"));
-    return fs.promises.access(filePath, fs.constants.F_OK)
-        .then(() => {throw new Error(`File already exists at ${filePath}`)})
-        .catch(() => filePath);
+    let givenPath = core.getInput("path");
+    givenPath = path.isAbsolute(givenPath) ? givenPath :
+        // need parent directory using ".." since we're in dist folder
+        path.join(__dirname, "..", core.getInput("path"));
+    return fs.promises.access(givenPath, fs.constants.F_OK)
+        .then(() => {throw new Error(`File already exists at ${givenPath}`)})
+        .catch(() => givenPath); // File doesn't exist or we manually threw
 }
 
 async function compile(dir) {
@@ -22,7 +25,7 @@ async function compile(dir) {
     // format: state: {year: last year seen, data: []}
     const statesSeen = {}, pathsLength = paths.length;
     let i = 0;  // completion counter... never programming in JS with files again
-    console.log(`Computing ${pathsLength} files districts...`);
+    core.info(`Computing ${pathsLength} GeoJSON file districts...`);
     for (let el of paths) {
         fs.readFile(el, "utf-8", (err, data) => {
             if (err) {
@@ -40,13 +43,13 @@ async function compile(dir) {
                 statesSeen[state].data.push(JSON.parse(data));
             }
             i++;
-            core.info(`Processed: ${state} at ${year} (counter: ${i} / ${pathsLength})`);
+            core.debug(`Processed: ${state} at ${year} (counter: ${i} / ${pathsLength})`);
         });
     }
     let waitMax = 3600, waitCounter = 0;
     while (i !== paths.length) {
         await new Promise(r => {
-            if (++waitCounter > waitMax) throw new Error("Exceeded an hour of trying");
+            if (waitCounter++ > waitMax) throw new Error("Exceeded an hour of trying");
             return setTimeout(r, 1000);
         });
     }
@@ -75,6 +78,7 @@ async function run() {
     }
     await git.cwd({path: clonedDir, root: true});
     await compile(clonedDir);
+    await fs.rmdir(clonedDir, {recursive: true}, () => {});
 }
 
 run();

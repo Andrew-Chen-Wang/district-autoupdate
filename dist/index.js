@@ -15037,6 +15037,42 @@ module.exports = toRegexRange;
 
 /***/ }),
 
+/***/ 1252:
+/***/ ((__unused_webpack_module, exports) => {
+
+exports.prunePaths = (paths) => {
+    // The format is typically in cds/year/STATE-DISTRICT-#/shape.geojson
+    // which means the year is ordered first after sort
+    paths.sort();
+
+    // format: state <str>: path <str>
+    const statesSeen = {}
+
+    // The purpose of this is to not need to open all files.
+    // The optimization comes down to "has the state shown up yet"
+    // Example path: /Users/blah/.district-1/cds/2012/PA-17/shape.geojson
+    for (const x of paths) {
+        const el = x.split("/"),
+            fileLength = el.length,
+            year = el[fileLength - 3],
+            state = el[fileLength - 2].split("-")[0];
+        const val = statesSeen[state];
+        if (val === undefined || year !== val.year) {
+            statesSeen[state] = {year: year, paths: [x]};
+        } else {
+            statesSeen[state].paths.push(x);
+        }
+    }
+    let newPaths = [];
+    Object.values(statesSeen).forEach((x) => {
+        newPaths.push(...x.paths);
+    });
+    return newPaths;
+}
+
+
+/***/ }),
+
 /***/ 3129:
 /***/ ((module) => {
 
@@ -15145,12 +15181,16 @@ const fs = __nccwpck_require__(5747);
 const globby = __nccwpck_require__(3398);
 const simpleGit = __nccwpck_require__(1477);
 const path = __nccwpck_require__(5622);
+const utils = __nccwpck_require__(1252);
 
 async function getPath() {
-    const filePath = path.join(__dirname, core.getInput("path"));
-    return fs.promises.access(filePath, fs.constants.F_OK)
-        .then(() => {throw new Error(`File already exists at ${filePath}`)})
-        .catch(() => filePath);
+    let givenPath = core.getInput("path");
+    givenPath = path.isAbsolute(givenPath) ? givenPath :
+        // need parent directory using ".." since we're in dist folder
+        path.join(__dirname, "..", core.getInput("path"));
+    return fs.promises.access(givenPath, fs.constants.F_OK)
+        .then(() => {throw new Error(`File already exists at ${givenPath}`)})
+        .catch(() => givenPath); // File doesn't exist or we manually threw
 }
 
 async function compile(dir) {
@@ -15159,11 +15199,11 @@ async function compile(dir) {
         "type": "FeatureCollection",
         "features": [],
     }
-    let paths = await globby(`${dir}/cds/**/shape.geojson`);
+    let paths = utils.prunePaths(await globby(`${dir}/cds/**/shape.geojson`));
     // format: state: {year: last year seen, data: []}
     const statesSeen = {}, pathsLength = paths.length;
     let i = 0;  // completion counter... never programming in JS with files again
-    console.log(`Computing ${pathsLength} files districts...`);
+    core.info(`Computing ${pathsLength} GeoJSON file districts...`);
     for (let el of paths) {
         fs.readFile(el, "utf-8", (err, data) => {
             if (err) {
@@ -15181,14 +15221,13 @@ async function compile(dir) {
                 statesSeen[state].data.push(JSON.parse(data));
             }
             i++;
-            core.info(`Processed: ${state} at ${year} (counter: ${i} / ${pathsLength})`);
+            core.debug(`Processed: ${state} at ${year} (counter: ${i} / ${pathsLength})`);
         });
     }
     let waitMax = 3600, waitCounter = 0;
     while (i !== paths.length) {
         await new Promise(r => {
-            waitCounter++;
-            if (++waitCounter > waitMax) throw new Error("Exceeded an hour of trying");
+            if (waitCounter++ > waitMax) throw new Error("Exceeded an hour of trying");
             return setTimeout(r, 1000);
         });
     }
@@ -15217,6 +15256,7 @@ async function run() {
     }
     await git.cwd({path: clonedDir, root: true});
     await compile(clonedDir);
+    await fs.rmdir(clonedDir, {recursive: true}, () => {});
 }
 
 run();
