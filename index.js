@@ -6,7 +6,7 @@ const path = require('path');
 const utils = require('./utils');
 
 async function getPath() {
-    const filePath = path.join(__dirname, core.getInput("path"));
+    const filePath = path.join(__dirname, "..", core.getInput("path"));
     return fs.promises.access(filePath, fs.constants.F_OK)
         .then(() => {throw new Error(`File already exists at ${filePath}`)})
         .catch(() => filePath);
