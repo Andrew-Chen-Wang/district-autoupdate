@@ -1,9 +1,49 @@
 const mock = require('mock-fs');
 const utils = require('./utils');
+const constants = require('./test_utils/consts');
 
 afterEach(() => {
     mock.restore();
 })
+
+test("test current 2012 and only 2012", async() => {
+    // 435 districts + 6 non voting
+    expect(utils.prunePaths(constants.cds2012).length).toEqual(441);
+});
+
+const permutator = (permutation) => {
+    // https://stackoverflow.com/a/37580979
+    let length = permutation.length,
+        result = [permutation.slice()],
+        c = new Array(length).fill(0),
+        i = 1, k, p;
+
+    while (i < length) {
+        if (c[i] < i) {
+            k = i % 2 && c[i];
+            p = permutation[i];
+            permutation[i] = permutation[k];
+            permutation[k] = p;
+            ++c[i];
+            i = 1;
+            result.push(permutation.slice());
+        } else {
+            c[i] = 0;
+            ++i;
+        }
+    }
+    return result;
+}
+
+describe("test current paths permuted", () => {
+    it.each(permutator([2012, 2016, 2018, 2020]))(
+        "expect 441 regardless of order of paths inputted",
+        (a, b, c, d) => {
+            const allPaths = [];
+            [a, b, c, d].forEach(year => allPaths.push(...constants[`cds${year}`]));
+            expect(utils.prunePaths(allPaths).length).toEqual(441)
+    });
+});
 
 const listOut = (year, state="NC", n=13) => {
     let _a = (new Array(n + 1)).fill(1).map(
