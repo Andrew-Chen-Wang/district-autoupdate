@@ -7,12 +7,17 @@ const utils = require('./utils');
 
 async function getPath() {
     let givenPath = core.getInput("path");
+    core.info(__dirname)
+    core.info(path.join(__dirname, "..", "..", core.getInput("path")))
+    core.info(path.join(__dirname, "..", core.getInput("path")))
+    core.info(path.join(path.resolve(__dirname, ".."), givenPath))
+    core.info(path.join(path.resolve(__dirname, "..", ".."), givenPath))
     givenPath = path.isAbsolute(givenPath) ? givenPath :
         // need parent directory using ".." since we're in dist folder
         path.join(__dirname, core.getInput("path"));
     return fs.promises.access(givenPath, fs.constants.F_OK)
         .then(() => {throw new Error(`File already exists at ${givenPath}`)})
-        .catch(() => givenPath);
+        .catch(() => givenPath); // File doesn't exist or we manually threw
 }
 
 async function compile(dir) {
@@ -25,7 +30,7 @@ async function compile(dir) {
     // format: state: {year: last year seen, data: []}
     const statesSeen = {}, pathsLength = paths.length;
     let i = 0;  // completion counter... never programming in JS with files again
-    core.debug(`Computing ${pathsLength} files districts...`);
+    core.info(`Computing ${pathsLength} GeoJSON file districts...`);
     for (let el of paths) {
         fs.readFile(el, "utf-8", (err, data) => {
             if (err) {
