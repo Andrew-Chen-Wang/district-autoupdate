@@ -26,7 +26,7 @@ jobs:
       uses: ./
       id: districts-geojson-update
       with:
-        path: ${{ github.workspace }}/districts.geojson
+        path: districts.geojson
 
     # test action by showing on different branch
     - name: Show on branch

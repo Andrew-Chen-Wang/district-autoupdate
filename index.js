@@ -6,10 +6,13 @@ const path = require('path');
 const utils = require('./utils');
 
 async function getPath() {
-    const filePath = path.join(__dirname, "..", core.getInput("path"));
-    return fs.promises.access(filePath, fs.constants.F_OK)
-        .then(() => {throw new Error(`File already exists at ${filePath}`)})
-        .catch(() => filePath);
+    let givenPath = core.getInput("path");
+    givenPath = path.isAbsolute(givenPath) ? givenPath :
+        // need parent directory using ".." since we're in dist folder
+        path.join(__dirname, "..", core.getInput("path"));
+    return fs.promises.access(givenPath, fs.constants.F_OK)
+        .then(() => {throw new Error(`File already exists at ${givenPath}`)})
+        .catch(() => givenPath);
 }
 
 async function compile(dir) {
@@ -40,7 +43,7 @@ async function compile(dir) {
                 statesSeen[state].data.push(JSON.parse(data));
             }
             i++;
-            core.info(`Processed: ${state} at ${year} (counter: ${i} / ${pathsLength})`);
+            core.debug(`Processed: ${state} at ${year} (counter: ${i} / ${pathsLength})`);
         });
     }
     let waitMax = 3600, waitCounter = 0;
