@@ -36,4 +36,4 @@ jobs:
         branch: checking-if-geojson-worked
         repository: .
         file_pattern: "*.geojson"
-        commit_options: '--no-verify --signoff -a'
+        commit_options: '--no-verify --signoff'

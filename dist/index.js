@@ -15185,14 +15185,9 @@ const utils = __nccwpck_require__(1252);
 
 async function getPath() {
     let givenPath = core.getInput("path");
-    core.info(__dirname)
-    core.info(path.join(__dirname, "..", "..", core.getInput("path")))
-    core.info(path.join(__dirname, "..", core.getInput("path")))
-    core.info(path.join(path.resolve(__dirname, ".."), givenPath))
-    core.info(path.join(path.resolve(__dirname, "..", ".."), givenPath))
     givenPath = path.isAbsolute(givenPath) ? givenPath :
         // need parent directory using ".." since we're in dist folder
-        path.join(__dirname, core.getInput("path"));
+        path.join(__dirname, "..", core.getInput("path"));
     return fs.promises.access(givenPath, fs.constants.F_OK)
         .then(() => {throw new Error(`File already exists at ${givenPath}`)})
         .catch(() => givenPath); // File doesn't exist or we manually threw
