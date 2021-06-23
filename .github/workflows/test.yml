@@ -20,15 +20,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
     - name: Run action
       uses: ./
       id: districts-geojson-update
       with:
         path: districts.geojson
-
-    - name: Move file and delete old directory
-      run: |
-        mv ${{ steps.districts-geojson-update.outputs.filePath }} $GITHUB_WORKSPACE
 
     # test action by showing on different branch
     - name: Show on branch
