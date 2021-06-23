@@ -13,12 +13,22 @@ and to see if your representatives misrepresent their constituents.
 ### Usage
 
 ```yaml
-- uses: Andrew-Chen-Wang/district-autoupdate@v1.0.0
-  with:
-    path: ${{ github.workspace }}/districts.geojson
-- uses: stefanzweifel/git-auto-commit-action@v4
-  with:
-    commit_message: Autoupdate districts
+name: Districts Autoupdate
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '42 18 * * 4'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: Andrew-Chen-Wang/district-autoupdate@v1.0.0
+      with:
+        path: ${{ github.workspace }}/districts.geojson
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Autoupdate districts
 ```
 
 ---
