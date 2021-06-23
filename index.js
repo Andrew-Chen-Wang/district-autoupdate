@@ -3,6 +3,7 @@ const fs = require('fs');
 const globby = require('globby');
 const simpleGit = require('simple-git');
 const path = require('path');
+const utils = require('./utils');
 
 async function getPath() {
     const filePath = path.join(__dirname, core.getInput("path"));
@@ -17,7 +18,7 @@ async function compile(dir) {
         "type": "FeatureCollection",
         "features": [],
     }
-    let paths = await globby(`${dir}/cds/**/shape.geojson`);
+    let paths = utils.prunePaths(await globby(`${dir}/cds/**/shape.geojson`));
     // format: state: {year: last year seen, data: []}
     const statesSeen = {}, pathsLength = paths.length;
     let i = 0;  // completion counter... never programming in JS with files again
@@ -45,7 +46,6 @@ async function compile(dir) {
     let waitMax = 3600, waitCounter = 0;
     while (i !== paths.length) {
         await new Promise(r => {
-            waitCounter++;
             if (++waitCounter > waitMax) throw new Error("Exceeded an hour of trying");
             return setTimeout(r, 1000);
         });

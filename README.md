@@ -15,13 +15,8 @@ and to see if your representatives misrepresent their constituents.
 ```yaml
 uses: Andrew-Chen-Wang/district-autupdate@v1
 with:
-  path: ./districts.geojson # Required path to a GeoJSON file to save
+  path: districts.geojson # Required path to a GeoJSON file to save
 ```
-
-There is an optional link option which allows you to specify
-a specific archived zip file from the unitedstates/districts
-repository. So long as it's a ZIP file with the same formats
-as the original repository, you should be good to go.
 
 ---
 
