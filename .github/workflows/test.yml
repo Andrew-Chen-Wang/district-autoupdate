@@ -28,7 +28,7 @@ jobs:
 
     - name: Move file and delete old directory
       run: |
-        mv ${{ outputs.steps.districts-geojson-update.filePath }} $GITHUB_WORKSPACE
+        mv ${{ steps.districts-geojson-update.outputs.filePath }} $GITHUB_WORKSPACE
 
     # test action by showing on different branch
     - name: Show on branch
