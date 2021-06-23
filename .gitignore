@@ -1,5 +1,5 @@
 # Project specific
-.district-*/**
+*.district-*/**
 
 node_modules/
 
