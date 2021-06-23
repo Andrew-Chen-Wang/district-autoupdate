@@ -28,6 +28,10 @@ jobs:
       with:
         path: districts.geojson
 
+    - run: |
+        git checkout checking-if-geojson-worked
+        git add districts.geojson
+
     # test action by showing on different branch
     - name: Show on branch
       uses: stefanzweifel/git-auto-commit-action@v4
