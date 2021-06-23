@@ -15,7 +15,17 @@ and to see if your representatives misrepresent their constituents.
 ```yaml
 uses: Andrew-Chen-Wang/district-autupdate@v1
 with:
-  path: districts.geojson # Required path to a GeoJSON file to save
+  # Required path to a GeoJSON file to git add
+  # It can be an absolute or relative path
+  path: districts.geojson
+
+# Autocommit
+- name: Show on branch
+  uses: stefanzweifel/git-auto-commit-action@v4
+  with:
+    commit_message: Autocommit districts.geojson
+    repository: .
+    file_pattern: "*.geojson"
 ```
 
 ---
