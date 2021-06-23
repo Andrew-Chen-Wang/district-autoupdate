@@ -13,9 +13,12 @@ and to see if your representatives misrepresent their constituents.
 ### Usage
 
 ```yaml
-uses: Andrew-Chen-Wang/district-autupdate@v1
-with:
-  path: districts.geojson # Required path to a GeoJSON file to save
+- uses: Andrew-Chen-Wang/district-autoupdate@v1.0.0
+  with:
+    path: ${{ github.workspace }}/districts.geojson
+- uses: stefanzweifel/git-auto-commit-action@v4
+  with:
+    commit_message: Autoupdate districts
 ```
 
 ---

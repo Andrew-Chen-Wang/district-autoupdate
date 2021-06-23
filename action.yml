@@ -4,7 +4,7 @@ inputs:
   path:
     description: 'Path to a GeoJSON file to save'
     required: true
-    default: "districts.geojson"
+    default: ${{ github.workspace }}/districts.geojson"
   districts-repo:
     description: 'Repository that holds the districts'
     required: false
