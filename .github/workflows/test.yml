@@ -26,7 +26,7 @@ jobs:
       uses: ./
       id: districts-geojson-update
       with:
-        path: districts.geojson
+        path: "$GITHUB_WORKSPACE/districts.geojson"
 
     # test action by showing on different branch
     - name: Show on branch
@@ -36,3 +36,4 @@ jobs:
         branch: checking-if-geojson-worked
         repository: .
         file_pattern: "*.geojson"
+        commit_options: '--no-verify --signoff -a'
