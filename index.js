@@ -62,8 +62,8 @@ async function compile(dir) {
         core.info(`Dumped file at ${compiledPath}`);
         core.setOutput("filePath", compiledPath);
     });
-    const git = simpleGit();
-    await git.add(compiledPath);
+    // const git = simpleGit();
+    // await git.add(compiledPath);
 }
 
 async function run() {
