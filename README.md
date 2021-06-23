@@ -23,6 +23,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - uses: Andrew-Chen-Wang/district-autoupdate@v1.0.0
       with:
         path: ${{ github.workspace }}/districts.geojson
