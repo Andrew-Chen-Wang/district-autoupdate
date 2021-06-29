@@ -29,7 +29,7 @@
   "homepage": "https://github.com/Andrew-Chen-Wang/district-autoupdate#readme",
   "dependencies": {
     "@actions/core": "^1.4.0",
-    "@actions/exec": "^1.0.4",
+    "@actions/exec": "^1.1.0",
     "globby": "^11.0.4",
     "simple-git": "^2.40.0"
   },
