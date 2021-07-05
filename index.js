@@ -70,7 +70,7 @@ async function run() {
     let repo = `https://:${core.getInput("token")}@github.com/${core.getInput("districts-repo")}.git`;
     core.info("Cloning...");
     try {
-        await git.clone(repo, clonedDir);
+        await git.clone(repo, clonedDir, ["--depth", "1", "-b", core.getInput("tag-branch"), "--single-branch"]);
     } catch (e) {
         core.error(e);
         core.setFailed("Failed to clone repository");
