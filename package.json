@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.28.6",
-    "eslint": "^7.29.0",
+    "eslint": "^7.30.0",
     "jest": "^27.0.6",
     "mock-fs": "^5.0.0"
   }
