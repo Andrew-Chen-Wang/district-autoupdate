@@ -9,8 +9,8 @@ inputs:
     description: 'Repository that holds the districts'
     required: false
     default: 'unitedstates/districts'
-  sha-branch:
-    description: 'Branch or SHA value to view full git tree'
+  tag-branch:
+    description: 'Branch or git tag value to use'
     required: false
     default: 'gh-pages'
   token:
