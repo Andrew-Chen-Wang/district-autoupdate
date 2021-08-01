@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const fs = require('fs');
-const globby = require('globby');
+import {globby} from 'globby';
 const simpleGit = require('simple-git');
 const path = require('path');
 const utils = require('./utils');
