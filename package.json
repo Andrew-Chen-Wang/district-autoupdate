@@ -34,7 +34,7 @@
     "simple-git": "^2.44.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.29.1",
+    "@vercel/ncc": "^0.30.0",
     "eslint": "^7.32.0",
     "jest": "^27.0.6",
     "mock-fs": "^5.0.0"
