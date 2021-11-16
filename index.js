@@ -53,7 +53,7 @@ async function compile(dir) {
             return setTimeout(r, 1000);
         });
     }
-    for (const x of Object.values(statesSeen)) {
+    for (const x of Object.values(statesSeen).sort((x, y) => x.properties.Code > y.properties.Code)) {
         featureCollection.features.push(...x.data);
     }
     const compiledPath = await getPath();
